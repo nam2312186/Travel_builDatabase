@@ -1,0 +1,227 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model TaiKhoan {
+  TenNguoiDung String   @id
+  CCCD         String   @unique
+  DiaChi       String
+  Email        String
+  GioiTinh     String
+  NgaySinh     DateTime
+  DiemTichLuy  Int      @default(0)
+  MatKhau      String
+  TrangThai    Boolean
+  Role         String   @default("user") // "user" hoặc "admin"
+
+  SoDienThoai SoDienThoai[]
+  DonDat      DonDat[]
+  DanhGia     DanhGia[]
+}
+
+model SoDienThoai {
+  TenNguoiDung String
+  SoDienThoai  String
+
+  taiKhoan TaiKhoan @relation(fields: [TenNguoiDung], references: [TenNguoiDung], onDelete: Cascade)
+
+  @@id([TenNguoiDung, SoDienThoai])
+}
+
+model Tour {
+  IDTour           String  @id
+  TenTour          String
+  AnhTour          String?
+  MoTa             String?
+  ChiPhiTour       Decimal
+  LuongKhachDuKien Int
+
+  trips    Trip[]
+  diemDen  Den[]
+  phuTrach PhuTrach[]
+  danhGia  DanhGia[]
+}
+
+model Trip {
+  IDTour        String
+  ID            String   @unique
+  NgayKhoiHanh  DateTime
+  NgayKetThuc   DateTime
+  MoTa          String?
+  ChiPhiThucTe  Decimal
+  NoiDon        String
+  GiaVeNguoiLon Decimal
+  GiaVeTreEm    Decimal
+
+  tour     Tour       @relation(fields: [IDTour], references: [IDTour], onDelete: Cascade)
+  donDat   DonDat[]
+  danhGia  DanhGia[]
+  phuTrach PhuTrach[]
+
+  @@id([ID, IDTour])
+}
+
+model DonDat {
+  MaSo          String   @id
+  TenNguoiDung  String
+  IDTrip        String
+  IDTour        String
+  SoLuongVe_LON Int
+  SoLuongVe_TRE Int
+  TrangThai     Boolean
+  GhiChu        String?
+  ThoiGianDat   DateTime
+  TongGia       Decimal  @default(0)
+
+  taiKhoan  TaiKhoan   @relation(fields: [TenNguoiDung], references: [TenNguoiDung], onDelete: Cascade)
+  trip      Trip       @relation(fields: [IDTrip, IDTour], references: [ID, IDTour], onDelete: Cascade)
+  khuyenMai ApDung?
+  thanhToan ThanhToan?
+}
+
+model KhuyenMai {
+  MaKhuyenMai     String   @id
+  TenUuDai        String
+  DieuKien        String?
+  SoLuong         Int
+  NgayBatDau      DateTime
+  NgayKetThuc     DateTime
+  DiemThuong      Int      @default(0)
+  GiamPhanTram    Decimal?
+  GiamSoTien      Decimal?
+  GiamToiDa       Decimal?
+  TongDonToiThieu Decimal?
+
+  apDung ApDung[]
+}
+
+model ApDung {
+  MaSo        String @unique
+  MaKhuyenMai String
+
+  donDat    DonDat    @relation(fields: [MaSo], references: [MaSo], onDelete: Cascade)
+  khuyenMai KhuyenMai @relation(fields: [MaKhuyenMai], references: [MaKhuyenMai], onDelete: Cascade)
+
+  @@id([MaSo])
+}
+
+model HuongDanVien {
+  ID       String  @id
+  Ho       String
+  TenDem   String?
+  Ten      String
+  IDQuanLy String?
+
+  quanLy   HuongDanVien?  @relation("QuanLy", fields: [IDQuanLy], references: [ID])
+  nhanVien HuongDanVien[] @relation("QuanLy")
+
+  ngoaiNgu NgoaiNgu[]
+  phuTrach PhuTrach[]
+}
+
+model NgoaiNgu {
+  ID       String
+  NgoaiNgu String
+
+  huongDanVien HuongDanVien @relation(fields: [ID], references: [ID], onDelete: Cascade)
+
+  @@id([ID, NgoaiNgu])
+}
+
+model PhuTrach {
+  IDTour         String
+  IDHuongDanVien String
+  IDTrip         String
+  NgayBatDau     DateTime
+  NgayKetThuc    DateTime
+
+  tour         Tour         @relation(fields: [IDTour], references: [IDTour], onDelete: Cascade)
+  huongDanVien HuongDanVien @relation(fields: [IDHuongDanVien], references: [ID], onDelete: Cascade)
+  trip         Trip         @relation(fields: [IDTrip], references: [ID], onDelete: Cascade)
+
+  @@id([IDHuongDanVien, IDTrip, IDTour])
+}
+
+model ThanhToan {
+  ID                  String   @id
+  MaSo                String   @unique
+  NgayThanhToan       DateTime
+  SoTien              Decimal
+  PhuongThucThanhToan String
+
+  donDat DonDat @relation(fields: [MaSo], references: [MaSo], onDelete: Cascade)
+}
+
+model DiaDiem {
+  ID         String  @id
+  AnhMoTa    Bytes?
+  GhiChuMoTa String?
+  Xa         String
+  Huyen      String
+  Tinh       String
+
+  den      Den[]
+  khachSan KhachSan?
+  nhaHang  NhaHang?
+}
+
+model Den {
+  IDTour             String
+  IDDiaDiem          String
+  TrinhTu            Int
+  PhuongTien         String
+  ThoiGianMoiDiaDiem DateTime
+
+  tour    Tour    @relation(fields: [IDTour], references: [IDTour], onDelete: Cascade)
+  diaDiem DiaDiem @relation(fields: [IDDiaDiem], references: [ID], onDelete: Cascade)
+
+  @@id([IDTour, IDDiaDiem])
+}
+
+model NhaHang {
+  ID                String  @id
+  TenNhaHang        String
+  PhongCachTrangTri String?
+  PhongCachAmThuc   String?
+
+  diaDiem DiaDiem @relation(fields: [ID], references: [ID], onDelete: Cascade)
+}
+
+model KhachSan {
+  ID          String @id
+  TenKhachSan String
+  LoaiPhong   String
+
+  diaDiem  DiaDiem    @relation(fields: [ID], references: [ID], onDelete: Cascade)
+  sdtLeTan SDTLeTan[]
+}
+
+model SDTLeTan {
+  IDKhachSan  String
+  SoDienThoai String
+
+  khachSan KhachSan @relation(fields: [IDKhachSan], references: [ID], onDelete: Cascade)
+
+  @@id([IDKhachSan, SoDienThoai])
+}
+
+model DanhGia {
+  Diem            Int
+  NhanXet         String?
+  TenNguoiDanhGia String
+  IDTrip          String
+  IDTour          String
+
+  taiKhoan   TaiKhoan @relation(fields: [TenNguoiDanhGia], references: [TenNguoiDung], onDelete: Cascade)
+  trip       Trip     @relation(fields: [IDTrip, IDTour], references: [ID, IDTour], onDelete: Cascade)
+  Tour       Tour?    @relation(fields: [tourIDTour], references: [IDTour])
+  tourIDTour String?
+
+  @@id([TenNguoiDanhGia, IDTrip, IDTour])
+}
