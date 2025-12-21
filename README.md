@@ -668,12 +668,6 @@ POST   /api/admin/users/:username/reset-password  // Reset password
 ### 📝 Đặt tour & Thanh toán
 ![Booking](./docs/images/booking.png)
 
-### 💳 Thanh toán QR Code
-![QR Payment](./docs/images/qr-payment.png)
-
-### 🛡️ Admin Dashboard
-![Admin Dashboard](./docs/images/admin.png)
-
 </div>
 
 ---
