@@ -233,18 +233,32 @@ const deleteUser = async (req, res) => {
       return res.status(403).json({ message: 'Không thể xóa tài khoản admin' });
     }
 
-    // Xóa các bản ghi liên quan trước
+    // Xóa các bản ghi liên quan trước theo thứ tự
+    // 1. Lấy danh sách đơn đặt của user
+    const userBookings = await prisma.donDat.findMany({
+      where: { TenNguoiDung: username },
+      select: { MaSo: true }
+    });
+
+    // 2. Xóa thanh toán và áp dụng khuyến mãi của các đơn đặt
+    for (const booking of userBookings) {
+      await prisma.thanhToan.deleteMany({ where: { MaSo: booking.MaSo } });
+      await prisma.apDung.deleteMany({ where: { MaSo: booking.MaSo } });
+    }
+
+    // 3. Xóa các bản ghi còn lại
     await prisma.soDienThoai.deleteMany({ where: { TenNguoiDung: username } });
-    await prisma.danhGia.deleteMany({ where: { TenNguoiDung: username } });
+    await prisma.danhGia.deleteMany({ where: { TenNguoiDanhGia: username } });
     await prisma.donDat.deleteMany({ where: { TenNguoiDung: username } });
 
-    // Xóa tài khoản
+    // 4. Xóa tài khoản
     await prisma.taiKhoan.delete({
       where: { TenNguoiDung: username }
     });
 
     res.json({ message: 'Xóa tài khoản thành công' });
   } catch (err) {
+    console.error('Delete user error:', err);
     res.status(500).json({ message: 'Lỗi server', error: err.message });
   }
 };

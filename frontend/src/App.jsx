@@ -1,6 +1,8 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
+import { setupAutoLogout } from './utils/autoLogout';
 
 // Components
 import Header from './components/Header';
@@ -19,7 +21,23 @@ import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   const location = useLocation();
+  const navigate = useNavigate();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+  // Setup auto logout
+  useEffect(() => {
+    const handleAutoLogout = () => {
+      localStorage.clear();
+      toast.warning('⏰ Phiên đăng nhập đã hết hạn do không hoạt động. Vui lòng đăng nhập lại!', {
+        autoClose: 5000
+      });
+      navigate('/login');
+    };
+
+    const cleanup = setupAutoLogout(handleAutoLogout);
+
+    return cleanup;
+  }, [navigate]);
 
   if (isAuthPage) {
     return (

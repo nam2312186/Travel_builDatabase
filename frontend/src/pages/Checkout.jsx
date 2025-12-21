@@ -1,170 +1,8 @@
-// import { useEffect, useState } from 'react';
-// import axios from 'axios';
-
-// function Checkout() {
-//   const user = JSON.parse(localStorage.getItem('user'));
-
-//   const [orders, setOrders] = useState([]);
-//   const [promotionCode, setPromotionCode] = useState({});
-//   const [promotions, setPromotions] = useState([]);
-//   const [message, setMessage] = useState('');
-
-//   // 🧾 Lấy đơn chưa thanh toán
-//   const fetchOrders = async () => {
-//     try {
-//       const res = await axios.get(`http://localhost:5000/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`);
-//       const pending = res.data.filter(o => !o.TrangThai);
-//       setOrders(pending);
-//     } catch {
-//       setMessage('Không thể tải danh sách đơn hàng.');
-//     }
-//   };
-
-//   useEffect(() => {
-//     if (user?.TenNguoiDung) {
-//       fetchOrders();
-//       axios.get('http://localhost:5000/api/promotions')
-//         .then(res => setPromotions(res.data))
-//         .catch(console.error);
-//     }
-//   }, []);
-
-//   const applyPromotion = async (MaSo, MaKhuyenMai = null) => {
-//     const code = MaKhuyenMai || promotionCode[MaSo];
-//     if (!code) return setMessage('Vui lòng nhập mã khuyến mãi');
-
-//     try {
-//       const res = await axios.post('http://localhost:5000/api/promotions/apply', { MaSo, MaKhuyenMai: code });
-//       setMessage(`Áp dụng mã ${code} thành công! Tổng mới: ${res.data.TongGiaSauKhiGiam.toLocaleString()} đ`);
-//       fetchOrders();
-//     } catch (err) {
-//       setMessage(err.response?.data?.message || 'Không áp dụng được mã');
-//     }
-//   };
-
-//   const pay = async (MaSo, method) => {
-//     try {
-//       await axios.post('http://localhost:5000/api/payments', { MaSo, PhuongThucThanhToan: method });
-//       setMessage(`Đơn ${MaSo} đã thanh toán thành công`);
-//       fetchOrders();
-//     } catch (err) {
-//       setMessage(err.response?.data?.message || 'Lỗi thanh toán');
-//     }
-//   };
-
-//   return (
-//     <div className="p-4">
-//       <h2 className="text-2xl font-bold mb-4">Thanh toán đơn đặt</h2>
-
-//       {orders.length === 0 ? (
-//         <p className="text-gray-500">Bạn chưa có đơn nào đang chờ thanh toán.</p>
-//       ) : (
-//         <ul className="space-y-6">
-//           {orders.map(order => {
-//             // ✅ Lấy giá vé từ trip
-//             const giaLon = order.trip?.GiaVeNguoiLon || 0;
-//             const giaTre = order.trip?.GiaVeTreEm || 0;
-//             const originalPrice = (order.SoLuongVe_LON * giaLon) + (order.SoLuongVe_TRE * giaTre);
-//             const hasDiscount = Number(order.TongGia) < originalPrice;
-
-//             const applicablePromos = promotions.filter(p =>
-//               Number(order.TongGia) >= (p.TongDonToiThieu || 0)
-//             );
-
-//             return (
-//               <li key={order.MaSo} className="border p-4 bg-white rounded shadow">
-//                 <p><strong>🧾 Mã đơn:</strong> {order.MaSo}</p>
-//                 <p>Tour: {order.IDTour} | Chuyến: {order.IDTrip}</p>
-//                 <p>🧍‍♂️ Người lớn: {order.SoLuongVe_LON} × {giaLon.toLocaleString()} đ</p>
-//                 <p>👧 Trẻ em: {order.SoLuongVe_TRE} × {giaTre.toLocaleString()} đ</p>
-
-//                 {/* 💰 Giá */}
-//                 <p className="mt-2">
-//                   <strong>💰 Tổng giá:</strong> {Number(order.TongGia).toLocaleString()} đ
-//                 </p>
-
-//                 {hasDiscount && (
-//                   <>
-//                     <p className="text-green-600 text-sm">
-//                       ✅ Đã giảm: {(originalPrice - order.TongGia).toLocaleString()} đ
-//                     </p>
-//                     <p className="text-indigo-700 font-semibold">
-//                       Tổng sau giảm: {Number(order.TongGia).toLocaleString()} đ
-//                     </p>
-//                   </>
-//                 )}
-
-//                 {/* 🎁 Mã khuyến mãi */}
-//                 <div className="flex gap-2 mt-3">
-//                   <input
-//                     type="text"
-//                     placeholder="Nhập mã khuyến mãi"
-//                     className="border px-2 py-1 rounded"
-//                     value={promotionCode[order.MaSo] || ''}
-//                     onChange={(e) =>
-//                       setPromotionCode(prev => ({ ...prev, [order.MaSo]: e.target.value }))
-//                     }
-//                   />
-//                   <button
-//                     onClick={() => applyPromotion(order.MaSo)}
-//                     className="bg-indigo-600 text-white px-3 py-1 rounded"
-//                   >
-//                     Áp dụng
-//                   </button>
-//                 </div>
-
-//                 {/* ⚡ Gợi ý mã phù hợp */}
-//                 {applicablePromos.length > 0 && (
-//                   <div className="mt-3 border-t pt-2">
-//                     <p className="text-sm font-semibold mb-1">🎁 Mã khuyến mãi phù hợp:</p>
-//                     <div className="flex flex-wrap gap-2">
-//                       {applicablePromos.map(p => (
-//                         <button
-//                           key={p.MaKhuyenMai}
-//                           onClick={() => applyPromotion(order.MaSo, p.MaKhuyenMai)}
-//                           className="text-sm bg-yellow-100 hover:bg-yellow-200 px-2 py-1 rounded border text-indigo-700"
-//                         >
-//                           {p.TenUuDai} ({p.MaKhuyenMai})
-//                         </button>
-//                       ))}
-//                     </div>
-//                   </div>
-//                 )}
-
-//                 {/* 💳 Thanh toán */}
-//                 <div className="mt-4">
-//                   <label className="text-sm font-medium">Phương thức thanh toán:</label>
-//                   <select
-//                     className="ml-2 border p-1 rounded"
-//                     onChange={(e) => pay(order.MaSo, e.target.value)}
-//                     defaultValue=""
-//                   >
-//                     <option value="" disabled>-- Chọn --</option>
-//                     <option value="Tiền mặt">Tiền mặt</option>
-//                     <option value="Chuyển khoản">Chuyển khoản</option>
-//                     <option value="Thẻ tín dụng">Thẻ tín dụng</option>
-//                   </select>
-//                 </div>
-//               </li>
-//             );
-//           })}
-//         </ul>
-//       )}
-
-//       {message && (
-//         <div className="mt-4 text-blue-600 font-medium">
-//           {message}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// export default Checkout;
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { QRCodeSVG } from 'qrcode.react';
 import backgroundLogin from '../assets/backgroundLogin.png';
 
 function Checkout() {
@@ -174,6 +12,9 @@ function Checkout() {
   const [orders, setOrders] = useState([]);
   const [promotionCode, setPromotionCode] = useState({});
   const [promotions, setPromotions] = useState([]);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [currentPayment, setCurrentPayment] = useState(null);
+  const [message, setMessage] = useState('');
 
   // Kiểm tra đăng nhập
   if (!user) {
@@ -224,7 +65,6 @@ function Checkout() {
       </div>
     );
   }
-  const [message, setMessage] = useState('');
 
   // Lấy đơn chưa thanh toán
   const fetchOrders = async () => {
@@ -259,10 +99,38 @@ function Checkout() {
     }
   };
 
-  const pay = async (MaSo, method) => {
+  const pay = async (MaSo, method, order) => {
+    // Nếu chọn chuyển khoản, hiển thị QR code
+    if (method === 'Chuyển khoản') {
+      setCurrentPayment({ 
+        MaSo, 
+        orderId: MaSo,
+        amount: Number(order.TongGia),
+        order 
+      });
+      setShowQRModal(true);
+      return;
+    }
+
+    // Các phương thức khác xử lý như bình thường
     try {
       await axios.post('http://localhost:5000/api/payments', { MaSo, PhuongThucThanhToan: method });
       toast.success(`✅ Đơn ${MaSo} đã thanh toán thành công!`);
+      fetchOrders();
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Lỗi thanh toán');
+    }
+  };
+
+  const confirmBankTransfer = async () => {
+    try {
+      await axios.post('http://localhost:5000/api/payments', { 
+        MaSo: currentPayment.MaSo, 
+        PhuongThucThanhToan: 'Chuyển khoản' 
+      });
+      toast.success(`✅ Xác nhận thanh toán thành công!`);
+      setShowQRModal(false);
+      setCurrentPayment(null);
       fetchOrders();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Lỗi thanh toán');
@@ -395,18 +263,98 @@ function Checkout() {
                   <label className="font-semibold text-gray-700">💳 Phương thức:</label>
                   <select
                     className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none font-medium"
-                    onChange={(e) => pay(order.MaSo, e.target.value)}
+                    onChange={(e) => pay(order.MaSo, e.target.value, order)}
                     defaultValue=""
                   >
                     <option value="" disabled>-- Chọn phương thức thanh toán --</option>
                     <option value="Tiền mặt">💵 Tiền mặt</option>
-                    <option value="Chuyển khoản">🏦 Chuyển khoản</option>
+                    <option value="Chuyển khoản">🏦 Chuyển khoản (QR Code)</option>
                     <option value="Thẻ tín dụng">💳 Thẻ tín dụng</option>
                   </select>
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* QR Code Payment Modal */}
+      {showQRModal && currentPayment && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowQRModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl font-bold"
+            >
+              ×
+            </button>
+
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-green-600 mb-2">
+                🏦 Thanh toán chuyển khoản
+              </h3>
+              <p className="text-gray-600">
+                Quét mã QR để chuyển khoản
+              </p>
+            </div>
+
+            {/* QR Code */}
+            <div className="flex justify-center mb-6 bg-white p-4 rounded-lg shadow-inner">
+              <QRCodeSVG
+                value={`Bank: BIDV | Account: 0123456789 | Amount: ${currentPayment?.amount?.toLocaleString() || '0'}đ | Order: ${currentPayment?.orderId || ''} | Content: Thanh toan don hang ${currentPayment?.orderId || ''}`}
+                size={220}
+                level="H"
+                includeMargin={true}
+              />
+            </div>
+
+            {/* Bank Details */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 mb-6 border-2 border-green-100">
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 font-medium">Ngân hàng:</span>
+                  <span className="font-bold text-green-700">BIDV</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 font-medium">Số tài khoản:</span>
+                  <span className="font-bold text-green-700">0123456789</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 font-medium">Chủ TK:</span>
+                  <span className="font-bold text-green-700">VIET TRAVEL</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 font-medium">Số tiền:</span>
+                  <span className="font-bold text-red-600 text-lg">
+                    {currentPayment?.amount?.toLocaleString() || '0'}đ
+                  </span>
+                </div>
+                <div className="border-t border-green-200 pt-2 mt-2">
+                  <span className="text-gray-600 font-medium">Nội dung:</span>
+                  <p className="font-bold text-green-700 break-words">
+                    Thanh toan don hang {currentPayment?.orderId || ''}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Note */}
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6">
+              <p className="text-xs text-yellow-800">
+                ⚠️ <strong>Lưu ý:</strong> Vui lòng chuyển khoản đúng số tiền và nội dung để đơn hàng được xử lý tự động.
+              </p>
+            </div>
+
+            {/* Confirm Button */}
+            <button
+              onClick={confirmBankTransfer}
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-4 rounded-lg font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              ✓ Đã chuyển khoản
+            </button>
+          </div>
         </div>
       )}
     </div>
