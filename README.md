@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🏖️ Viet_Travel - Hệ Thống Đặt Tour Du Lịch
+# 🏖️ Viet_Travel - Travel Tour Booking System
 
-### *Nền tảng quản lý tour du lịch hiện đại với thiết kế database toàn diện*
+### *Modern travel tour management platform with comprehensive database design*
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
@@ -11,28 +11,28 @@
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3+-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
-[🚀 Demo](http://localhost:5174) • [📖 Tài liệu](./docs) • [🐛 Báo lỗi](https://github.com/yourusername/viet-travel/issues)
+[🚀 Demo](http://localhost:5174) • [📖 Documentation](./docs) • [🐛 Report Bug](https://github.com/yourusername/viet-travel/issues)
 
 </div>
 
 ---
 
-## 📋 Tổng quan
+## 📋 Overview
 
-**Viet_Travel** là một hệ thống quản lý và đặt tour du lịch được xây dựng với mục đích chính là **minh họa thiết kế cơ sở dữ liệu quan hệ** cho ứng dụng thực tế. Dự án tích hợp đầy đủ các tính năng từ đặt tour, thanh toán, áp dụng khuyến mãi, đánh giá chuyến đi đến trang quản trị dành cho admin.
+**Viet_Travel** is a tour management and booking system built primarily to **demonstrate relational database design** for real-world applications. The project integrates comprehensive features including tour booking, payment processing, promotion application, trip reviews, and admin management dashboard.
 
-### ✨ Điểm nổi bật
+### ✨ Key Features
 
-- 🎯 **Thiết kế Database chuyên nghiệp** với ERD đầy đủ, triggers, stored procedures, functions
-- 🔐 **Bảo mật cao** với JWT authentication, bcrypt password hashing, role-based access control
-- 💳 **Thanh toán đa dạng** hỗ trợ tiền mặt, chuyển khoản QR code, thẻ tín dụng
-- 📊 **Admin Dashboard** với thống kê tổng quan, quản lý người dùng và tour
-- 🎨 **UI/UX hiện đại** với Tailwind CSS và React components
-- ⚡ **Performance tối ưu** với Vite build tool và React 18
+- 🎯 **Professional Database Design** with complete ERD, triggers, stored procedures, functions
+- 🔐 **High Security** with JWT authentication, bcrypt password hashing, role-based access control
+- 💳 **Multiple Payment Methods** supporting cash, QR code transfer, credit card
+- 📊 **Admin Dashboard** with comprehensive statistics, user and tour management
+- 🎨 **Modern UI/UX** with Tailwind CSS and React components
+- ⚡ **Optimized Performance** with Vite build tool and React 18
 
 ---
 
-## 🏗️ Kiến trúc hệ thống
+## 🏗️ System Architecture
 
 <div align="center">
 
@@ -72,9 +72,9 @@ graph TB
 
 ---
 
-## 🗄️ Thiết kế cơ sở dữ liệu
+## 🗄️ Database Design
 
-### 📊 Sơ đồ quan hệ (ERD)
+### 📊 Entity Relationship Diagram (ERD)
 
 <div align="center">
 
@@ -131,7 +131,7 @@ graph TB
 
 </div>
 
-### 🔑 Bảng dữ liệu chi tiết
+### 🔑 Detailed Data Tables
 
 <details>
 <summary><b>📌 TaiKhoan (User Accounts)</b></summary>
@@ -225,12 +225,12 @@ graph TB
 
 </details>
 
-### ⚙️ Tính năng Database nâng cao
+### ⚙️ Advanced Database Features
 
 #### 🔄 Triggers
 
 ```sql
--- Tự động cập nhật số lượng đã đặt
+-- Automatically update booked quantity
 CREATE TRIGGER trg_UpdateSoLuongDaDat
 AFTER INSERT ON DonDat
 FOR EACH ROW
@@ -239,7 +239,7 @@ BEGIN
     WHERE ID = NEW.IDTrip;
 END;
 
--- Cộng điểm tích lũy sau thanh toán
+-- Add loyalty points after payment
 CREATE TRIGGER trg_UpdateDiemTichLuy
 AFTER INSERT ON ThanhToan
 FOR EACH ROW
@@ -250,7 +250,7 @@ BEGIN
     WHERE t.TenNguoiDung = d.TenNguoiDung;
 END;
 
--- Ngăn xóa tài khoản admin
+-- Prevent admin account deletion
 CREATE TRIGGER trg_PreventAdminDelete
 BEFORE DELETE ON TaiKhoan
 FOR EACH ROW
@@ -264,35 +264,35 @@ END;
 #### 📦 Stored Procedures
 
 ```sql
--- Tạo đơn đặt với validation
+-- Create booking with validation
 CALL sp_CreateBooking(username, tour_id, trip_id, adult_qty, child_qty);
 
--- Xử lý thanh toán
+-- Process payment
 CALL sp_ProcessPayment(booking_id, payment_method, amount);
 
--- Áp dụng mã khuyến mãi
+-- Apply promotion code
 CALL sp_ApplyPromotion(booking_id, promo_code);
 
--- Lấy lịch sử đặt tour
+-- Get user booking history
 CALL sp_GetUserBookingHistory(username);
 ```
 
 #### ⚡ Functions
 
 ```sql
--- Tính tổng doanh thu
+-- Calculate total revenue
 SELECT fn_CalculateTotalRevenue('2024-01-01', '2024-12-31');
 
--- Điểm đánh giá trung bình
+-- Get average rating
 SELECT fn_GetAverageRating('TOUR001');
 
--- Kiểm tra mã khuyến mãi
+-- Check promotion validity
 SELECT fn_CheckPromotionValidity('SUMMER2024');
 ```
 
 ---
 
-## 🚀 Công nghệ sử dụng
+## 🚀 Technology Stack
 
 <div align="center">
 
@@ -322,7 +322,7 @@ SELECT fn_CheckPromotionValidity('SUMMER2024');
 
 ---
 
-## 📁 Cấu trúc dự án
+## 📁 Project Structure
 
 ```bash
 viet-travel/
@@ -396,15 +396,15 @@ viet-travel/
 
 ---
 
-## ⚡ Bắt đầu nhanh
+## ⚡ Quick Start
 
-### 📋 Yêu cầu hệ thống
+### 📋 System Requirements
 
-- ![Node.js](https://img.shields.io/badge/Node.js-18+-green) Node.js 18 hoặc cao hơn
-- ![MySQL](https://img.shields.io/badge/MySQL-8.0+-blue) MySQL 8.0 hoặc cao hơn
-- ![npm](https://img.shields.io/badge/npm-9+-red) npm hoặc yarn
+- ![Node.js](https://img.shields.io/badge/Node.js-18+-green) Node.js 18 or higher
+- ![MySQL](https://img.shields.io/badge/MySQL-8.0+-blue) MySQL 8.0 or higher
+- ![npm](https://img.shields.io/badge/npm-9+-red) npm or yarn
 
-### 🔧 Cài đặt
+### 🔧 Installation
 
 #### 1️⃣ Clone repository
 
@@ -413,7 +413,7 @@ git clone https://github.com/yourusername/viet-travel.git
 cd viet-travel
 ```
 
-#### 2️⃣ Cài đặt dependencies
+#### 2️⃣ Install dependencies
 
 ```bash
 # Backend dependencies
@@ -425,9 +425,9 @@ cd ../frontend
 npm install
 ```
 
-#### 3️⃣ Cấu hình môi trường
+#### 3️⃣ Environment configuration
 
-Tạo file `.env` trong thư mục `backend`:
+Create `.env` file in `backend` folder:
 
 ```env
 # Database
@@ -441,30 +441,30 @@ PORT=5000
 NODE_ENV=development
 ```
 
-#### 4️⃣ Thiết lập database
+#### 4️⃣ Database setup
 
 ```bash
 cd backend
 
-# Tạo database
+# Create database
 mysql -u root -p
 CREATE DATABASE btl;
 exit;
 
-# Chạy migrations
+# Run migrations
 npx prisma migrate dev
 
-# Hoặc push schema trực tiếp
+# Or push schema directly
 npx prisma db push
 
 # Generate Prisma Client
 npx prisma generate
 
-# Seed dữ liệu mẫu (optional)
+# Seed sample data (optional)
 npx prisma db seed
 ```
 
-#### 5️⃣ Chạy ứng dụng
+#### 5️⃣ Run the application
 
 ```bash
 # Terminal 1 - Backend (port 5000)
@@ -476,7 +476,7 @@ cd frontend
 npm run dev
 ```
 
-#### 6️⃣ Truy cập ứng dụng
+#### 6️⃣ Access the application
 
 🌐 **Frontend**: http://localhost:5173  
 🔧 **Backend API**: http://localhost:5000  
@@ -484,7 +484,7 @@ npm run dev
 
 ---
 
-## 👥 Tài khoản demo
+## 👥 Demo Accounts
 
 <table>
 <tr>
@@ -497,11 +497,11 @@ Username: nampham1401
 Password: 14012005
 ```
 
-**Quyền hạn:**
-- ✅ Quản lý người dùng
+**Permissions:**
+- ✅ User management
 - ✅ CRUD tours
-- ✅ Xem tất cả bookings
-- ✅ Thống kê dashboard
+- ✅ View all bookings
+- ✅ Dashboard statistics
 
 </td>
 <td>
@@ -513,11 +513,11 @@ Username: user1
 Password: 123456
 ```
 
-**Quyền hạn:**
-- ✅ Đặt tour
-- ✅ Thanh toán
-- ✅ Xem lịch sử
-- ✅ Đánh giá tour
+**Permissions:**
+- ✅ Book tours
+- ✅ Make payments
+- ✅ View history
+- ✅ Review tours
 
 </td>
 </tr>
@@ -525,44 +525,44 @@ Password: 123456
 
 ---
 
-## ✨ Tính năng chi tiết
+## ✨ Detailed Features
 
-### 🎯 Dành cho người dùng (User)
-
-<div align="center">
-
-| Tính năng | Mô tả | Trạng thái |
-|-----------|-------|-----------|
-| 🔐 **Đăng ký/Đăng nhập** | Xác thực với validation đầy đủ (email, CCCD, password strength) | ✅ |
-| 🏖️ **Xem tour** | Browse danh sách tour với hình ảnh, mô tả, giá vé | ✅ |
-| 📅 **Chi tiết tour** | Xem lịch trình, giá vé người lớn/trẻ em, đánh giá | ✅ |
-| 🎫 **Đặt tour** | Chọn số lượng vé, ngày khởi hành | ✅ |
-| 🎁 **Mã khuyến mãi** | Nhập mã hoặc chọn từ gợi ý phù hợp | ✅ |
-| 💳 **Thanh toán** | Tiền mặt / Chuyển khoản QR / Thẻ tín dụng | ✅ |
-| 📜 **Lịch sử** | Xem đơn đã đặt, trạng thái thanh toán | ✅ |
-| ⭐ **Đánh giá** | Rate và review tour đã tham gia | ✅ |
-| 👤 **Hồ sơ** | Xem thông tin, điểm tích lũy, thanh toán nhanh | ✅ |
-| ⏰ **Auto-logout** | Tự động đăng xuất sau 15 phút không hoạt động | ✅ |
-
-</div>
-
-### 🛡️ Dành cho quản trị viên (Admin)
+### 🎯 For Users
 
 <div align="center">
 
 | Tính năng | Mô tả | Trạng thái |
 |-----------|-------|-----------|
-| 📊 **Dashboard** | Thống kê tổng quan: doanh thu, booking, users, tours | ✅ |
-| 👥 **Quản lý user** | Xem danh sách, xóa user, reset password | ✅ |
-| 🏖️ **Quản lý tour** | CRUD operations: Create, Read, Update, Delete | ✅ |
-| 📅 **Quản lý trip** | Thêm lịch trình mới, cập nhật giá vé theo trip | ✅ |
-| 📝 **Xem bookings** | Danh sách tất cả đơn đặt, filter theo trạng thái | ✅ |
-| 🎁 **Quản lý khuyến mãi** | Tạo, sửa, xóa mã giảm giá | ✅ |
-| 📈 **Báo cáo** | Export dữ liệu, thống kê theo khoảng thời gian | 🚧 |
+| 🔐 **Register/Login** | Authentication with full validation (email, ID card, password strength) | ✅ |
+| 🏖️ **Browse tours** | Browse tour list with images, descriptions, prices | ✅ |
+| 📅 **Tour details** | View itinerary, adult/child prices, reviews | ✅ |
+| 🎫 **Book tour** | Select ticket quantity, departure date | ✅ |
+| 🎁 **Promo codes** | Enter code or select from suggested matches | ✅ |
+| 💳 **Payment** | Cash / QR transfer / Credit card | ✅ |
+| 📜 **History** | View booked orders, payment status | ✅ |
+| ⭐ **Reviews** | Rate and review completed tours | ✅ |
+| 👤 **Profile** | View info, loyalty points, quick payment | ✅ |
+| ⏰ **Auto-logout** | Automatically logout after 15 minutes of inactivity | ✅ |
 
 </div>
 
-### 🔒 Bảo mật
+### 🛡️ For Administrators
+
+<div align="center">
+
+| Tính năng | Mô tả | Trạng thái |
+|-----------|-------|-----------|
+| 📊 **Dashboard** | Overview statistics: revenue, bookings, users, tours | ✅ |
+| 👥 **User management** | View list, delete users, reset password | ✅ |
+| 🏖️ **Tour management** | CRUD operations: Create, Read, Update, Delete | ✅ |
+| 📅 **Trip management** | Add new schedules, update prices per trip | ✅ |
+| 📝 **View bookings** | List all bookings, filter by status | ✅ |
+| 🎁 **Promotion management** | Create, edit, delete discount codes | ✅ |
+| 📈 **Reports** | Export data, statistics by time period | 🚧 |
+
+</div>
+
+### 🔒 Security
 
 - ✅ **Password hashing** với bcrypt (salt rounds: 10)
 - ✅ **JWT authentication** với access tokens
@@ -581,9 +581,9 @@ Password: 123456
 <summary><b>🔐 Authentication</b></summary>
 
 ```javascript
-POST   /api/auth/register          // Đăng ký tài khoản mới
-POST   /api/auth/login             // Đăng nhập
-GET    /api/auth/profile           // Lấy thông tin user (protected)
+POST   /api/auth/register          // Register new account
+POST   /api/auth/login             // Login
+GET    /api/auth/profile           // Get user info (protected)
 ```
 
 </details>
@@ -592,12 +592,12 @@ GET    /api/auth/profile           // Lấy thông tin user (protected)
 <summary><b>🏖️ Tours & Trips</b></summary>
 
 ```javascript
-GET    /api/tours                  // Danh sách tours
-GET    /api/tours/:id              // Chi tiết tour
-GET    /api/tours/:id/trips        // Lịch trình của tour
-POST   /api/admin/tours            // Tạo tour mới (admin only)
-PUT    /api/admin/tours/:id        // Cập nhật tour (admin only)
-DELETE /api/admin/tours/:id        // Xóa tour (admin only)
+GET    /api/tours                  // List tours
+GET    /api/tours/:id              // Tour details
+GET    /api/tours/:id/trips        // Tour schedules
+POST   /api/admin/tours            // Create new tour (admin only)
+PUT    /api/admin/tours/:id        // Update tour (admin only)
+DELETE /api/admin/tours/:id        // Delete tour (admin only)
 ```
 
 </details>
@@ -606,9 +606,9 @@ DELETE /api/admin/tours/:id        // Xóa tour (admin only)
 <summary><b>📝 Bookings</b></summary>
 
 ```javascript
-POST   /api/bookings               // Tạo đơn đặt
-GET    /api/bookings/user          // Lịch sử đặt tour của user
-GET    /api/admin/bookings         // Tất cả bookings (admin only)
+POST   /api/bookings               // Create booking
+GET    /api/bookings/user          // User booking history
+GET    /api/admin/bookings         // All bookings (admin only)
 ```
 
 </details>
@@ -617,8 +617,8 @@ GET    /api/admin/bookings         // Tất cả bookings (admin only)
 <summary><b>💳 Payments</b></summary>
 
 ```javascript
-POST   /api/payments               // Thanh toán đơn hàng
-GET    /api/payments/history       // Lịch sử thanh toán
+POST   /api/payments               // Process payment
+GET    /api/payments/history       // Payment history
 ```
 
 </details>
@@ -627,9 +627,9 @@ GET    /api/payments/history       // Lịch sử thanh toán
 <summary><b>🎁 Promotions</b></summary>
 
 ```javascript
-GET    /api/promotions             // Danh sách khuyến mãi
-POST   /api/promotions/apply       // Áp dụng mã
-POST   /api/admin/promotions       // Tạo khuyến mãi (admin only)
+GET    /api/promotions             // List promotions
+POST   /api/promotions/apply       // Apply code
+POST   /api/admin/promotions       // Create promotion (admin only)
 ```
 
 </details>
@@ -638,8 +638,8 @@ POST   /api/admin/promotions       // Tạo khuyến mãi (admin only)
 <summary><b>⭐ Reviews</b></summary>
 
 ```javascript
-POST   /api/reviews                // Gửi đánh giá
-GET    /api/reviews/tour/:id       // Đánh giá của tour
+POST   /api/reviews                // Submit review
+GET    /api/reviews/tour/:id       // Tour reviews
 ```
 
 </details>
@@ -648,9 +648,9 @@ GET    /api/reviews/tour/:id       // Đánh giá của tour
 <summary><b>🛡️ Admin</b></summary>
 
 ```javascript
-GET    /api/admin/stats            // Thống kê dashboard
-GET    /api/admin/users            // Danh sách users
-DELETE /api/admin/users/:username  // Xóa user
+GET    /api/admin/stats            // Dashboard statistics
+GET    /api/admin/users            // List users
+DELETE /api/admin/users/:username  // Delete user
 POST   /api/admin/users/:username/reset-password  // Reset password
 ```
 
@@ -662,10 +662,10 @@ POST   /api/admin/users/:username/reset-password  // Reset password
 
 <div align="center">
 
-### 🏠 Trang chủ
+### 🏠 Home Page
 ![Home Page](./docs/images/home.png)
 
-### 📝 Đặt tour & Thanh toán
+### 📝 Booking & Payment
 ![Booking](./docs/images/booking.png)
 
 </div>
@@ -676,15 +676,15 @@ POST   /api/admin/users/:username/reset-password  // Reset password
 
 ### Render.com (Recommended)
 
-1. **Tạo tài khoản** tại [Render.com](https://render.com)
+1. **Create account** at [Render.com](https://render.com)
 2. **Connect GitHub** repository
-3. **Tạo Web Service** cho backend
-4. **Tạo Static Site** cho frontend
-5. **Cấu hình environment variables**
+3. **Create Web Service** for backend
+4. **Create Static Site** for frontend
+5. **Configure environment variables**
 
-Chi tiết xem file `render.yaml`
+See `render.yaml` for details
 
-### Các nền tảng khác
+### Other platforms
 
 - **Vercel**: Frontend deployment
 - **Railway**: Full-stack deployment
@@ -695,12 +695,12 @@ Chi tiết xem file `render.yaml`
 
 ## 📊 Database Scripts
 
-Trong thư mục `docs/database/`:
+In the `docs/database/` folder:
 
-| File | Mô tả |
+| File | Description |
 |------|-------|
-| `createtable_new.sql` | 🏗️ Tạo cấu trúc bảng |
-| `createValue_new.sql` | 💾 Insert dữ liệu mẫu |
+| `createtable_new.sql` | 🏭️ Create table structure |
+| `createValue_new.sql` | 💾 Insert sample data |
 | `triggers_new.sql` | ⚡ Database triggers |
 | `procedure_new.sql` | 📦 Stored procedures |
 | `function_news.sql` | ⚙️ User-defined functions |
@@ -712,40 +712,40 @@ Trong thư mục `docs/database/`:
 
 ## 🔮 Roadmap
 
-- [ ] 📸 Upload ảnh tour từ admin panel
-- [ ] 🔍 Tìm kiếm và lọc tour nâng cao (theo giá, ngày, địa điểm)
-- [ ] 💬 Chat hỗ trợ trực tuyến
-- [ ] 💰 Tích hợp thanh toán online (VNPay, Momo, ZaloPay)
-- [ ] 📄 Xuất báo cáo PDF
-- [ ] 📧 Email xác nhận đặt tour
-- [ ] ⭐ Review với upload ảnh
+- [ ] 📸 Upload tour images from admin panel
+- [ ] 🔍 Advanced tour search and filtering (by price, date, location)
+- [ ] 💬 Live chat support
+- [ ] 💰 Online payment integration (VNPay, Momo, ZaloPay)
+- [ ] 📄 Export PDF reports
+- [ ] 📧 Booking confirmation email
+- [ ] ⭐ Reviews with image upload
 - [ ] 🤖 AI recommender system
 - [ ] 📱 Mobile app (React Native)
 - [ ] 🌐 Multi-language support (EN, VI)
 
 ---
 
-## 🤝 Đóng góp
+## 🤝 Contributing
 
-Contributions, issues và feature requests đều được chào đón!
+Contributions, issues and feature requests are welcome!
 
-1. Fork dự án
-2. Tạo branch tính năng (`git checkout -b feature/AmazingFeature`)
+1. Fork the project
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Mở Pull Request
+5. Open Pull Request
 
 ---
 
-## 👨‍💻 Tác giả
+## 👨‍💻 Author
 
 <div align="center">
 
-**Nhóm sinh viên - Đồ án BTL Database**
+**Student Team - Database Course Project**
 
-🏫 Trường: Đại học Bách Khoa TP.HCM  
-📚 Môn học: Cơ sở dữ liệu  
-📅 Năm học: 2024-2025
+🏫 University: Ho Chi Minh City University of Technology
+📚 Course: Database Systems
+📅 Academic Year: 2024-2025
 
 </div>
 
@@ -753,29 +753,29 @@ Contributions, issues và feature requests đều được chào đón!
 
 ## 📝 License
 
-Dự án này được phát triển cho mục đích **học tập** và **nghiên cứu**.
+This project was developed for **educational** and **research** purposes.
 
 ---
 
-## 🙏 Lời cảm ơn
+## 🙏 Acknowledgements
 
-- 👨‍🏫 Cảm ơn giảng viên hướng dẫn
-- 💡 Tham khảo thiết kế từ [Traveloka.com](https://www.traveloka.com)
-- 🛠️ Cộng đồng [Prisma](https://www.prisma.io/), [React](https://react.dev/), [Express.js](https://expressjs.com/)
-- 📚 Stack Overflow, GitHub, và các tài liệu kỹ thuật
+- 👨‍🏫 Thanks to our supervising instructor
+- 💡 Design inspired by [Traveloka.com](https://www.traveloka.com)
+- 🛠️ [Prisma](https://www.prisma.io/), [React](https://react.dev/), [Express.js](https://expressjs.com/) communities
+- 📚 Stack Overflow, GitHub, and technical documentation
 
 ---
 
 <div align="center">
 
-### ⭐ Nếu dự án hữu ích, hãy cho một star! ⭐
+### ⭐ If this project is helpful, please give it a star! ⭐
 
-Made with ❤️ by Nhóm sinh viên HCMUT
+Made with ❤️ by HCMUT Student Team
 
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=viet-travel)
 [![GitHub stars](https://img.shields.io/github/stars/yourusername/viet-travel?style=social)](https://github.com/yourusername/viet-travel)
 [![GitHub forks](https://img.shields.io/github/forks/yourusername/viet-travel?style=social)](https://github.com/yourusername/viet-travel/fork)
 
-[⬆ Về đầu trang](#-viet_travel---hệ-thống-đặt-tour-du-lịch)
+[⬆ Back to top](#-viet_travel---travel-tour-booking-system)
 
 </div>
