@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import backgroundLogin from '../assets/backgroundLogin.png';
+import { API_BASE_URL } from '../config';
 
 function History() {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ function History() {
   }
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`)
+    axios.get(`${API_BASE_URL}/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`)
       .then(res => setOrders(res.data))
       .catch(err => setMessage('Lỗi khi lấy dữ liệu lịch sử'));
   }, []);

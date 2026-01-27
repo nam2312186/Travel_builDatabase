@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 function Promotions() {
   const [promotions, setPromotions] = useState([]);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/promotions')
+    axios.get(`${API_BASE_URL}/api/promotions`)
       .then(res => setPromotions(res.data))
       .catch(err => console.error(err));
   }, []);

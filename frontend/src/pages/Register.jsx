@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import backgroundLogin from '../assets/backgroundLogin.png';
+import { API_BASE_URL } from '../config';
 
 function Register() {
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ function Register() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', form);
+      await axios.post(`${API_BASE_URL}/api/auth/register`, form);
       toast.success('Đăng ký thành công! Đang chuyển đến trang đăng nhập...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err) {

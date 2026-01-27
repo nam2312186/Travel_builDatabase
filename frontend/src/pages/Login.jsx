@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import backgroundLogin from '../assets/backgroundLogin.png';
+import { API_BASE_URL } from '../config';
 
 function Login() {
   const [TenNguoiDung, setTenNguoiDung] = useState('');
@@ -13,7 +14,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         TenNguoiDung,
         MatKhau
       });

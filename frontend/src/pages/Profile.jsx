@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import backgroundLogin from '../assets/backgroundLogin.png';
+import { API_BASE_URL } from '../config';
 
 function Profile() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/users/me', {
+        const res = await axios.get(`${API_BASE_URL}/api/users/me`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -38,7 +39,7 @@ function Profile() {
 
   useEffect(() => {
     if (activeTab === 'payment' && localUser) {
-      axios.get(`http://localhost:5000/api/bookings/user?TenNguoiDung=${localUser.TenNguoiDung}`)
+      axios.get(`${API_BASE_URL}/api/bookings/user?TenNguoiDung=${localUser.TenNguoiDung}`)
         .then(res => {
           const unpaid = res.data.filter(order => !order.TrangThai);
           setUnpaidOrders(unpaid);
@@ -49,7 +50,7 @@ function Profile() {
 
   const handlePayment = async (orderId, totalPrice) => {
     try {
-      await axios.post('http://localhost:5000/api/payments', {
+      await axios.post(`${API_BASE_URL}/api/payments`, {
         MaSo: orderId,
         SoTien: totalPrice,
         PhuongThuc: 'Chuyển khoản'

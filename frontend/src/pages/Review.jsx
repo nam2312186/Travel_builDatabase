@@ -1,6 +1,7 @@
 // import { useEffect, useState } from 'react';
 // import axios from 'axios';
 // import { toast } from 'react-toastify';
+// import { API_BASE_URL } from '../config';
 // toast.success("Thành công!");
 // toast.error("Lỗi rồi!");
 
@@ -15,13 +16,13 @@
 //   useEffect(() => {
 //     const now = new Date();
   
-//     axios.get(`http://localhost:5000/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`)
+//     axios.get(`${API_BASE_URL}/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`)
 //       .then(async res => {
 //         const data = res.data.filter(o => o.TrangThai);
 //         const filtered = [];
   
 //         for (let o of data) {
-//           const trip = await axios.get(`http://localhost:5000/api/tours/${o.IDTour}`); // hoặc /trips
+//           const trip = await axios.get(`${API_BASE_URL}/api/tours/${o.IDTour}`); // hoặc /trips
 //           const match = trip.data.trips.find(t => t.ID === o.IDTrip);
 //           if (match && new Date(match.NgayKetThuc) < now) filtered.push(o);
 //         }
@@ -35,7 +36,7 @@
 //     if (!rv?.Diem) return setMessage('Nhập điểm đánh giá');
   
 //     try {
-//       await axios.post('http://localhost:5000/api/reviews', {
+//       await axios.post(`${API_BASE_URL}/api/reviews`, {
 //         TenNguoiDanhGia: user.TenNguoiDung,
 //         IDTour: order.IDTour,
 //         IDTrip: order.IDTrip,
@@ -107,6 +108,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { API_BASE_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
 import backgroundLogin from '../assets/backgroundLogin.png';
 
@@ -171,12 +173,12 @@ function Review() {
 
     const fetchEligibleOrders = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`);
+        const res = await axios.get(`${API_BASE_URL}/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`);
         const data = res.data.filter(o => o.TrangThai); // chỉ lấy đơn đã thanh toán
 
         const checked = await Promise.all(data.map(async (o) => {
           try {
-            const tour = await axios.get(`http://localhost:5000/api/tours/${o.IDTour}`);
+            const tour = await axios.get(`${API_BASE_URL}/api/tours/${o.IDTour}`);
             const trip = tour.data.trips.find(t => t.ID === o.IDTrip);
             if (trip && new Date(trip.NgayKetThuc) < now) return o;
           } catch (err) {
@@ -199,7 +201,7 @@ function Review() {
     if (!rv?.Diem) return toast.error('Vui lòng nhập điểm đánh giá');
 
     try {
-      await axios.post('http://localhost:5000/api/reviews', {
+      await axios.post(`${API_BASE_URL}/api/reviews`, {
         TenNguoiDanhGia: user.TenNguoiDung,
         IDTour: order.IDTour,
         IDTrip: order.IDTrip,

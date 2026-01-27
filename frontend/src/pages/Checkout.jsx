@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { QRCodeSVG } from 'qrcode.react';
 import backgroundLogin from '../assets/backgroundLogin.png';
+import { API_BASE_URL } from '../config';
 
 function Checkout() {
   const navigate = useNavigate();
@@ -69,7 +70,7 @@ function Checkout() {
   // Lấy đơn chưa thanh toán
   const fetchOrders = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`);
+      const res = await axios.get(`${API_BASE_URL}/api/bookings/user?TenNguoiDung=${user.TenNguoiDung}`);
       const pending = res.data.filter(o => !o.TrangThai);
       setOrders(pending);
     } catch {
@@ -80,7 +81,7 @@ function Checkout() {
   useEffect(() => {
     if (user?.TenNguoiDung) {
       fetchOrders();
-      axios.get('http://localhost:5000/api/promotions')
+      axios.get(`${API_BASE_URL}/api/promotions`)
         .then(res => setPromotions(res.data))
         .catch(console.error);
     }
@@ -91,7 +92,7 @@ function Checkout() {
     if (!code) return toast.error('Vui lòng nhập mã khuyến mãi');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/promotions/apply', { MaSo, MaKhuyenMai: code });
+      const res = await axios.post(`${API_BASE_URL}/api/promotions/apply`, { MaSo, MaKhuyenMai: code });
       toast.success(`Áp dụng mã ${code} thành công! Tổng mới: ${res.data.TongGiaSauKhiGiam.toLocaleString()} đ`);
       fetchOrders();
     } catch (err) {
@@ -114,7 +115,7 @@ function Checkout() {
 
     // Các phương thức khác xử lý như bình thường
     try {
-      await axios.post('http://localhost:5000/api/payments', { MaSo, PhuongThucThanhToan: method });
+      await axios.post(`${API_BASE_URL}/api/payments`, { MaSo, PhuongThucThanhToan: method });
       toast.success(`✅ Đơn ${MaSo} đã thanh toán thành công!`);
       fetchOrders();
     } catch (err) {
@@ -124,7 +125,7 @@ function Checkout() {
 
   const confirmBankTransfer = async () => {
     try {
-      await axios.post('http://localhost:5000/api/payments', { 
+      await axios.post(`${API_BASE_URL}/api/payments`, { 
         MaSo: currentPayment.MaSo, 
         PhuongThucThanhToan: 'Chuyển khoản' 
       });

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { API_BASE_URL } from '../config';
 toast.success("Thành công!");
 toast.error("Lỗi rồi!");
 
@@ -19,7 +20,7 @@ function Home() {
   
   useEffect(() => {
     setLoading(true);
-    axios.get('http://localhost:5000/api/tours')
+    axios.get(`${API_BASE_URL}/api/tours`)
       .then(res => {
         setTours(res.data);
         console.log('TOUR DATA:', res.data); // ✅ in toàn bộ danh sách tour

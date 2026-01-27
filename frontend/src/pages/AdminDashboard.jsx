@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { API_BASE_URL } from '../config';
 
 function AdminDashboard() {
   const [stats, setStats] = useState(null);
@@ -39,7 +40,7 @@ function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/stats', {
+      const res = await axios.get(`${API_BASE_URL}/api/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setStats(res.data);
@@ -50,7 +51,7 @@ function AdminDashboard() {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/bookings', {
+      const res = await axios.get(`${API_BASE_URL}/api/admin/bookings`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(res.data);
@@ -61,7 +62,7 @@ function AdminDashboard() {
 
   const fetchTours = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/tours', {
+      const res = await axios.get(`${API_BASE_URL}/api/admin/tours`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTours(res.data);
@@ -72,7 +73,7 @@ function AdminDashboard() {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/admin/users', {
+      const res = await axios.get(`${API_BASE_URL}/api/admin/users`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log('Users data:', res.data);
@@ -86,7 +87,7 @@ function AdminDashboard() {
   const handleCreateTour = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/admin/tours', newTour, {
+      await axios.post(`${API_BASE_URL}/api/admin/tours`, newTour, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Tạo tour thành công!');
@@ -100,7 +101,7 @@ function AdminDashboard() {
 
   const handleUpdateTour = async (tourId) => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/tours/${tourId}`, editingTour, {
+      await axios.put(`${API_BASE_URL}/api/admin/tours/${tourId}`, editingTour, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Cập nhật tour thành công!');
@@ -115,7 +116,7 @@ function AdminDashboard() {
     if (!window.confirm('Bạn có chắc muốn xóa tour này?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/admin/tours/${tourId}`, {
+      await axios.delete(`${API_BASE_URL}/api/admin/tours/${tourId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Xóa tour thành công!');
@@ -129,7 +130,7 @@ function AdminDashboard() {
     if (!window.confirm(`Bạn có chắc muốn xóa tài khoản ${username}? Tất cả đơn đặt và đánh giá của user này cũng sẽ bị xóa!`)) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/admin/users/${username}`, {
+      await axios.delete(`${API_BASE_URL}/api/admin/users/${username}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Xóa tài khoản thành công!');
@@ -144,7 +145,7 @@ function AdminDashboard() {
     if (!window.confirm(`Reset mật khẩu cho ${username} về 123456?`)) return;
 
     try {
-      const res = await axios.post(`http://localhost:5000/api/admin/users/${username}/reset-password`, {}, {
+      const res = await axios.post(`${API_BASE_URL}/api/admin/users/${username}/reset-password`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success(res.data.message);

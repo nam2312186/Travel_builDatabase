@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { API_BASE_URL } from '../config';
 
 function TourDetail() {
   const { id } = useParams();
@@ -18,13 +19,13 @@ function TourDetail() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/tours/${id}`)
+    axios.get(`${API_BASE_URL}/api/tours/${id}`)
       .then(res => setTour(res.data))
       .catch(console.error);
   }, [id]);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/reviews/${id}`)
+    axios.get(`${API_BASE_URL}/api/reviews/${id}`)
       .then(res => setReviews(res.data))
       .catch(console.error);
   }, [id]);
@@ -37,7 +38,7 @@ function TourDetail() {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/bookings', {
+      await axios.post(`${API_BASE_URL}/api/bookings`, {
         TenNguoiDung: user.TenNguoiDung,
         IDTour: id,
         IDTrip: selectedTrip.ID,
