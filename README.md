@@ -10,8 +10,9 @@
 [![Prisma](https://img.shields.io/badge/Prisma-6.7.0-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3+-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Azure](https://img.shields.io/badge/Azure-Deployed-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com/)
 
-[🚀 Demo](http://localhost:5174) • [📖 Documentation](./docs) • [🐛 Report Bug](https://github.com/yourusername/viet-travel/issues)
+[🚀 Live Demo](https://traveloka-frontend-nam2026-dtb5eraqh7hpgrej.malaysiawest-01.azurewebsites.net) • [📖 Deployment Guide](./DEPLOYMENT.md) • [🔧 API Docs](https://traveloka-backend-nam2026-ceftd6e0agfdhkd9.malaysiawest-01.azurewebsites.net/api/health)
 
 </div>
 
@@ -478,8 +479,10 @@ npm run dev
 
 #### 6️⃣ Access the application
 
-🌐 **Frontend**: http://localhost:5173  
-🔧 **Backend API**: http://localhost:5000  
+🌐 **Live Demo**: https://traveloka-frontend-nam2026-dtb5eraqh7hpgrej.malaysiawest-01.azurewebsites.net  
+🔧 **Backend API**: https://traveloka-backend-nam2026-ceftd6e0agfdhkd9.malaysiawest-01.azurewebsites.net  
+💻 **Local Frontend**: http://localhost:5173  
+🛠️ **Local Backend**: http://localhost:5000  
 📊 **Prisma Studio**: `npx prisma studio`
 
 ---
@@ -674,7 +677,21 @@ POST   /api/admin/users/:username/reset-password  // Reset password
 
 ## 🚀 Deployment
 
-### Render.com (Recommended)
+### ☁️ Azure (Production - Current)
+
+**Live Application:**
+- 🌐 Frontend: https://traveloka-frontend-nam2026-dtb5eraqh7hpgrej.malaysiawest-01.azurewebsites.net
+- 🔧 Backend: https://traveloka-backend-nam2026-ceftd6e0agfdhkd9.malaysiawest-01.azurewebsites.net
+- 🗄️ Database: Azure MySQL Flexible Server (Malaysia West)
+
+**Stack:**
+- Azure App Service (Free Tier F1) for frontend & backend
+- Azure Database for MySQL (Burstable B1ms - Free 750 hours/month)
+- GitHub Actions for CI/CD automation
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment guide.
+
+### Render.com (Alternative)
 
 1. **Create account** at [Render.com](https://render.com)
 2. **Connect GitHub** repository
